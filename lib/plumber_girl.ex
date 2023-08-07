@@ -5,7 +5,6 @@ defmodule PlumberGirl do
     end
   end
 
-
   @doc ~s"""
   Extracts the value from a tagged tuple like {:ok, value}
   Raises the value from a tagged tuple like {:error, value}
@@ -19,12 +18,11 @@ defmodule PlumberGirl do
       ** (RuntimeError) some
 
       iex> ok({:anything, "some"})
-      ** (ArgumentError) raise/1 expects an alias, string or exception as the first argument, got: {:anything, "some"}
+      ** (ArgumentError) raise/1 and reraise/2 expect a module name, string or exception as the first argument, got: {:anything, "some"}
   """
   def ok({:ok, x}), do: x
-  def ok({:error, x}), do: raise x
-  def ok(x), do: raise x
-
+  def ok({:error, x}), do: raise(x)
+  def ok(x), do: raise(x)
 
   @doc ~s"""
     No need to stop pipelining in case of an error somewhere in the middle
@@ -37,11 +35,11 @@ defmodule PlumberGirl do
   defmacro left >>> right do
     quote do
       (fn ->
-        case unquote(left) do
-          {:ok, x} -> x |> unquote(right)
-          {:error, _} = expr -> expr
-        end
-      end).()
+         case unquote(left) do
+           {:ok, x} -> x |> unquote(right)
+           {:error, _} = expr -> expr
+         end
+       end).()
     end
   end
 
@@ -64,9 +62,9 @@ defmodule PlumberGirl do
   defmacro bind(args, func) do
     quote do
       (fn ->
-        result = unquote(args) |> unquote(func)
-        {:ok, result}
-      end).()
+         result = unquote(args) |> unquote(func)
+         {:ok, result}
+       end).()
     end
   end
 
@@ -82,16 +80,14 @@ defmodule PlumberGirl do
   defmacro try_catch(args, func) do
     quote do
       (fn ->
-        try do
-          unquote(args) |> unquote(func)
-        rescue
-          e -> {:error, e}
-        end
-      end).()
+         try do
+           unquote(args) |> unquote(func)
+         rescue
+           e -> {:error, e}
+         end
+       end).()
     end
   end
-
-
 
   @doc ~s"""
     Like a similar Unix utility it does some work and returns the input as output.
@@ -105,9 +101,9 @@ defmodule PlumberGirl do
   defmacro tee(args, func) do
     quote do
       (fn ->
-        unquote(args) |> unquote(func)
-        {:ok, unquote(args)}
-      end).()
+         unquote(args) |> unquote(func)
+         {:ok, unquote(args)}
+       end).()
     end
   end
 end

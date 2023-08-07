@@ -4,14 +4,16 @@ defmodule PlumberGirl.Mixfile do
   @version "0.9.7"
 
   def project do
-    [app: :plumber_girl,
-     version: @version,
-     elixir: "~> 1.0",
-     build_embedded: Mix.env == :prod,
-     start_permanent: Mix.env == :prod,
-     package: package,
-     docs: [extras: ["README.md"]],
-     deps: deps]
+    [
+      app: :plumber_girl,
+      version: @version,
+      elixir: "~> 1.0",
+      build_embedded: Mix.env() == :prod,
+      start_permanent: Mix.env() == :prod,
+      package: package(),
+      docs: [extras: ["README.md"]],
+      deps: deps()
+    ]
   end
 
   # Configuration for the OTP application
@@ -32,23 +34,22 @@ defmodule PlumberGirl.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [
-      {:ex_spec, "~> 1.0", only: :test},
-      {:earmark, "~> 0.2", only: :dev},
-      {:ex_doc, "~> 0.11", only: :dev}
+      {:ex_spec, "~> 2.0", only: :test},
+      {:earmark, "~> 1.4", only: :dev},
+      {:ex_doc, "~> 0.30.4", only: :dev}
     ]
   end
 
-
   defp package do
     [
-     maintainers: ["Roman Heinrich", "Zohaib Rauf", "Remigiusz Jackowski"],
-     licenses: ["MIT License"],
-     files: ~w(lib mix.exs README.md LICENSE),
-     description: "PlumberGirl takes care of your Elixir piping issues!",
-     links: %{
-       github: "https://github.com/ruby2elixir/plumber_girl",
-       docs: "http://hexdocs.pm/plumber_girl/#{@version}/"
-     }
+      maintainers: ["Roman Heinrich", "Zohaib Rauf", "Remigiusz Jackowski"],
+      licenses: ["MIT License"],
+      files: ~w(lib mix.exs README.md LICENSE),
+      description: "PlumberGirl takes care of your Elixir piping issues!",
+      links: %{
+        github: "https://github.com/ruby2elixir/plumber_girl",
+        docs: "http://hexdocs.pm/plumber_girl/#{@version}/"
+      }
     ]
   end
 end
